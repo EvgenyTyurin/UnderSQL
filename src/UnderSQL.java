@@ -19,7 +19,25 @@ public class UnderSQL {
     // Run point
     public static void main(String[] args) {
         // Query collection init
-        queries[3][1] = "SELECT onum, amt, odate FROM orders;";
+        // Chapter 3
+        queries[3][1] = "SELECT onum, amt, odate FROM Orders;";
+        queries[3][2] = "SELECT * FROM Customer WHERE snum = 1001;";
+        queries[3][3] = "SELECT city, sname, snum, comm FROM salesmen;";
+        queries[3][4] = "SELECT rating, cname FROM Customer WHERE city = 'San Jose';";
+        queries[3][5] = "SELECT DISTINCT snum FROM Orders;";
+        // Chapter 4
+        queries[4][1] = "SELECT * FROM Orders WHERE amt > 1000;";
+        queries[4][2] = "SELECT sname, city FROM Salesmen WHERE comm > 0.1 AND city = 'London';";
+        // Chapter 5
+        queries[5][1] = "SELECT * FROM Orders WHERE odate IN (10/03/1990, 10/04/1990);";
+        queries[5][2] = "SELECT * FROM Customers WHERE snum IN (1001, 1004);";
+        queries[5][3] = "SELECT * FROM Customers WHERE cname BETWEEN 'A' AND 'H';";
+        // Query collection show
+        for (int chapterN = 1; chapterN < CHAPTER_MAX; chapterN++)
+            for (int exerciseN = 1; exerciseN < EXERCISE_MAX; exerciseN++)
+                if (queries[chapterN][exerciseN] != null)
+                    System.out.println("Chapter №" + chapterN + " Exercise №" + exerciseN + "\n" +
+                        queries[chapterN][exerciseN]);
         // User input cycle
         do {
             // Get chapter and exercise numbers from user

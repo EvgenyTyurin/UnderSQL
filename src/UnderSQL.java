@@ -1,3 +1,4 @@
+import java.io.File;
 import java.sql.*;
 import java.util.Scanner;
 
@@ -14,29 +15,26 @@ public class UnderSQL {
     // Task queries: [chapter][exercise number]
     private static final int CHAPTER_MAX = 30;
     private static final int EXERCISE_MAX = 10;
+    private static final String FILE_SQL = "src/sql.txt";
     private static String[][] queries = new String[CHAPTER_MAX][EXERCISE_MAX];
 
     // Run point
     public static void main(String[] args) {
         // Query collection init
-        // Chapter 3
-        queries[3][1] = "SELECT onum, amt, odate FROM Orders;";
-        queries[3][2] = "SELECT * FROM Customer WHERE snum = 1001;";
-        queries[3][3] = "SELECT city, sname, snum, comm FROM salesmen;";
-        queries[3][4] = "SELECT rating, cname FROM Customer WHERE city = 'San Jose';";
-        queries[3][5] = "SELECT DISTINCT snum FROM Orders;";
-        // Chapter 4
-        queries[4][1] = "SELECT * FROM Orders WHERE amt > 1000;";
-        queries[4][2] = "SELECT sname, city FROM Salesmen WHERE comm > 0.1 AND city = 'London';";
-        // Chapter 5
-        queries[5][1] = "SELECT * FROM Orders WHERE odate IN (10/03/1990, 10/04/1990);";
-        queries[5][2] = "SELECT * FROM Customers WHERE snum IN (1001, 1004);";
-        queries[5][3] = "SELECT * FROM Customers WHERE cname BETWEEN 'A' AND 'H';";
+        try {
+            Scanner scan = new Scanner(new File(FILE_SQL));
+            scan.useDelimiter("\n");
+            while (scan.hasNext()) {
+                // System.out.println(scan.next());
+                String[] words = scan.next().split("~");
+                queries[Integer.valueOf(words[0])][Integer.valueOf(words[1])] = words[2];
+            }
+        } catch (Exception e) {e.printStackTrace();}
         // Query collection show
         for (int chapterN = 1; chapterN < CHAPTER_MAX; chapterN++)
             for (int exerciseN = 1; exerciseN < EXERCISE_MAX; exerciseN++)
                 if (queries[chapterN][exerciseN] != null)
-                    System.out.println("Chapter №" + chapterN + " Exercise №" + exerciseN + "\n" +
+                    System.out.println("Ch.№" + chapterN + " Ex.№" + exerciseN + " " +
                         queries[chapterN][exerciseN]);
         // User input cycle
         do {

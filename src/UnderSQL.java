@@ -81,14 +81,15 @@ public class UnderSQL {
         }
     }
 
-    // Read queries collection from file and show it
+    // Read SQL queries collection from file and show it
     private static void queriesReady() {
         // Query collection init
         try {
             Scanner scanFile = new Scanner(new File(FILE_SQL));
             scanFile.useDelimiter("\n");
             while (scanFile.hasNext()) {
-                String[] words = scanFile.next().split("~");
+                String line = scanFile.next();
+                String[] words = line.split("~");
                 queries[Integer.valueOf(words[0])][Integer.valueOf(words[1])] = words[2];
             }
             scanFile.close();

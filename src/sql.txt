@@ -1,10 +1,21 @@
 3~1~SELECT onum, amt, odate FROM Orders
 3~2~SELECT * FROM Customer WHERE snum = 1001
-3~3~SELECT city, sname, snum, comm FROM salesmen
+3~3~SELECT city, sname, snum, comm FROM Salesmen
 3~4~SELECT rating, cname FROM Customer WHERE city = 'San Jose'
 3~5~SELECT DISTINCT snum FROM Orders
 4~1~SELECT * FROM Orders WHERE amt > 1000
 4~2~SELECT sname, city FROM Salesmen WHERE comm > 0.1 AND city = 'London'
 5~1~SELECT * FROM Orders WHERE odate IN (10/03/1990, 10/04/1990)
-5~2~SELECT * FROM Customers WHERE snum IN (1001, 1004)
-5~3~SELECT * FROM Customers WHERE cname BETWEEN 'A' AND 'H'
+5~2~SELECT * FROM Customer WHERE snum IN (1001, 1004)
+5~3~SELECT * FROM Customer WHERE cname BETWEEN 'A' AND 'H'
+5~4~SELECT * FROM Customer WHERE cname BETWEEN 'C' AND 'D'
+5~5~SELECT * FROM Orders WHERE amt = 0 OR amt IS NULL
+6~1~SELECT COUNT(*) FROM Orders WHERE odate = 10/03/1990
+6~2~SELECT COUNT(*) FROM (SELECT DISTINCT city FROM Customer)
+6~3~SELECT cnum, MIN(amt) FROM Orders GROUP BY cnum
+6~4~SELECT MIN(cname) FROM Customer WHERE cname LIKE 'G%'
+6~5~SELECT city, MAX(rating) FROM Customer GROUP BY city
+7~1~SELECT onum, snum, amt * 0.12 FROM Orders ORDER BY amt * 0.12
+7~2~SELECT 'For the city', city, 'max rating is', MAX(rating) FROM Customer GROUP BY city
+7~3~SELECT rating, cname, cnum FROM Customer ORDER BY rating DESC
+7~4~SELECT odate, SUM(amt) FROM ORDERS GROUP BY odate ORDER BY SUM(amt) DESC

@@ -11,31 +11,18 @@ public class UnderSQL {
 
     // Column's width
     private static final int COL_WIDTH = 15;
-
-    // Task queries: [chapter][exercise number]
+    // Collection size
     private static final int CHAPTER_MAX = 30;
     private static final int EXERCISE_MAX = 10;
+    // File with SQL collection
     private static final String FILE_SQL = "src/sql.txt";
+    // Task queries: [chapter number][exercise number]
     private static String[][] queries = new String[CHAPTER_MAX][EXERCISE_MAX];
 
     // Run point
     public static void main(String[] args) {
-        // Query collection init
-        try {
-            Scanner scan = new Scanner(new File(FILE_SQL));
-            scan.useDelimiter("\n");
-            while (scan.hasNext()) {
-                // System.out.println(scan.next());
-                String[] words = scan.next().split("~");
-                queries[Integer.valueOf(words[0])][Integer.valueOf(words[1])] = words[2];
-            }
-        } catch (Exception e) {e.printStackTrace();}
-        // Query collection show
-        for (int chapterN = 1; chapterN < CHAPTER_MAX; chapterN++)
-            for (int exerciseN = 1; exerciseN < EXERCISE_MAX; exerciseN++)
-                if (queries[chapterN][exerciseN] != null)
-                    System.out.println("Ch.№" + chapterN + " Ex.№" + exerciseN + " " +
-                        queries[chapterN][exerciseN]);
+        // Load and show queries collection
+        queriesReady();
         // User input cycle
         do {
             // Get chapter and exercise numbers from user
@@ -60,8 +47,7 @@ public class UnderSQL {
         } while (true);
     }
 
-    // Connect, exec a query to test database
-    // and print result
+    // Connect, exec a query to test database and print result
     private static void execQuery(String query) {
         try {
             // Connect DB
@@ -93,6 +79,27 @@ public class UnderSQL {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    } // static void ExecQuery(String query) {
+    }
+
+    // Read queries collection from file and show it
+    private static void queriesReady() {
+        // Query collection init
+        try {
+            Scanner scanFile = new Scanner(new File(FILE_SQL));
+            scanFile.useDelimiter("\n");
+            while (scanFile.hasNext()) {
+                String[] words = scanFile.next().split("~");
+                queries[Integer.valueOf(words[0])][Integer.valueOf(words[1])] = words[2];
+            }
+            scanFile.close();
+        } catch (Exception e) {e.printStackTrace();}
+        // Query collection show
+        for (int chapterN = 1; chapterN < CHAPTER_MAX; chapterN++)
+            for (int exerciseN = 1; exerciseN < EXERCISE_MAX; exerciseN++)
+                if (queries[chapterN][exerciseN] != null)
+                    System.out.println("Ch.№" + chapterN + " Ex.№" + exerciseN + " " +
+                            queries[chapterN][exerciseN]);
+        System.out.println("\n");
+    }
 
 }

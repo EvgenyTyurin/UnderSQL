@@ -68,9 +68,8 @@ public class UnderSQL {
             while (rs.next()) {
                 for (int columnCount = 1; columnCount <= rsmd.getColumnCount(); columnCount++) {
                     int colPos = (columnCount - 1) * COL_WIDTH + 1;
-                    String colName = rsmd.getColumnName(columnCount);
                     System.out.format("%" + colPos + "s",
-                            rs.getString(colName));
+                            rs.getString(columnCount));
                 }
                 System.out.print("\n\n");
             }

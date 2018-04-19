@@ -23,3 +23,8 @@
 8~2~SELECT onum, sname, cname FROM Orders, Salesmen, Customer WHERE Orders.snum = Salesmen.snum AND Orders.cnum = Customer.cnum;
 8~3~SELECT cname, sname, comm FROM Customer, Salesmen, Orders WHERE Salesmen.comm > 0.12 AND Orders.snum = Salesmen.snum AND Customer.cnum = Orders.cnum;
 8~4~SELECT onum, comm * amt FROM Orders, Salesmen, Customer WHERE Orders.snum = Salesmen.snum AND Customer.cnum = Orders.cnum AND rating > 100;
+9~1~SELECT S1.sname, S2.sname, S1.city FROM Salesmen S1, Salesmen S2 WHERE S1.city = S2.city AND S1.snum > S2.snum;
+9~3~SELECT C1.cname, C1.city FROM Customer C1, Customer C2 WHERE C1.rating = C2.rating AND C2.cname = 'Hoffman' AND C1.cnum <> C2.cnum;
+10~1~SELECT onum FROM Orders WHERE Orders.cnum IN (SELECT cnum FROM Customer WHERE Customer.cname = 'Cisneros');
+10~2~SELECT DISTINCT cname, rating FROM Customer, Orders WHERE amt > (SELECT AVG(amt) FROM Orders) AND Customer.cnum = Orders.cnum;
+10~3~SELECT snum, SUM(amt) FROM Orders GROUP BY snum HAVING SUM(amt) > (SELECT MAX(amt) FROM Orders);

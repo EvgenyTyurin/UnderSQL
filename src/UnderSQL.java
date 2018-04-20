@@ -88,11 +88,15 @@ public class UnderSQL {
             scanFile.useDelimiter("\n");
             while (scanFile.hasNext()) {
                 String line = scanFile.next();
-                String[] words = line.split("~");
-                queries[Integer.valueOf(words[0])][Integer.valueOf(words[1])] = words[2];
+                try {
+                    String[] words = line.split("~");
+                    queries[Integer.valueOf(words[0])][Integer.valueOf(words[1])] = words[2];
+                } catch (Exception e) {
+                    System.out.println("Error in parsing line:" + line);
+                }
             }
             scanFile.close();
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {e.printStackTrace(); }
         // Query collection show
         for (int chapterN = 1; chapterN < CHAPTER_MAX; chapterN++)
             for (int exerciseN = 1; exerciseN < EXERCISE_MAX; exerciseN++)

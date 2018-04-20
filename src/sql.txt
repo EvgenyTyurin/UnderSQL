@@ -28,3 +28,5 @@
 10~1~SELECT onum FROM Orders WHERE Orders.cnum IN (SELECT cnum FROM Customer WHERE Customer.cname = 'Cisneros');
 10~2~SELECT DISTINCT cname, rating FROM Customer, Orders WHERE amt > (SELECT AVG(amt) FROM Orders) AND Customer.cnum = Orders.cnum;
 10~3~SELECT snum, SUM(amt) FROM Orders GROUP BY snum HAVING SUM(amt) > (SELECT MAX(amt) FROM Orders);
+11~1~SELECT cnum, cname FROM Customer OuterC WHERE rating = (SELECT MAX(rating) FROM Customer InnerC WHERE InnerC.city = OuterC.city);
+11~2~SELECT sname, city FROM Salesmen WHERE 0 = (SELECT COUNT(*) FROM Customer WHERE Customer.city = Salesmen.city AND Customer.snum = Salesmen.snum);

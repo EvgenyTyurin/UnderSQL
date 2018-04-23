@@ -34,3 +34,8 @@
 12~2~SELECT DISTINCT sname FROM Salesmen, Customer WHERE Salesmen.snum = Customer.snum AND Customer.rating = 300
 12~3~SELECT sname FROM Salesmen WHERE EXISTS(SELECT * FROM Customer WHERE Customer.city = Salesmen.city AND Customer.snum <> Salesmen.snum)
 12~4~SELECT cname FROM Customer WHERE EXISTS(SELECT * FROM Orders WHERE Orders.snum = Customer.snum AND Orders.cnum <> Customer.cnum)
+13~1~SELECT * FROM Customer WHERE rating >= ANY (SELECT rating FROM Customer WHERE snum = 1002);
+13~3~SELECT * FROM Salesmen WHERE NOT city = ANY (SELECT city FROM Customer);
+14~1~SELECT *, 'High rate' FROM Customer WHERE rating >= 200 UNION SELECT *, 'Low rate' FROM Customer WHERE rating < 200;
+14~2~SELECT snum, sname FROM Salesmen WHERE 1 < (SELECT COUNT(*) FROM Orders WHERE Orders.snum = Salesmen.snum) UNION SELECT cnum, cname FROM Customer WHERE 1 < (SELECT COUNT(*) FROM Orders WHERE Orders.cnum = Customer.cnum) ORDER BY 2;
+14~3~SELECT snum FROM Salesmen WHERE city = 'San Jose' UNION (SELECT cnum FROM Customer WHERE city = 'San Jose' UNION ALL SELECT onum FROM Orders WHERE odate = 10/03/1990);

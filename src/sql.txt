@@ -39,3 +39,10 @@
 14~1~SELECT *, 'High rate' FROM Customer WHERE rating >= 200 UNION SELECT *, 'Low rate' FROM Customer WHERE rating < 200;
 14~2~SELECT snum, sname FROM Salesmen WHERE 1 < (SELECT COUNT(*) FROM Orders WHERE Orders.snum = Salesmen.snum) UNION SELECT cnum, cname FROM Customer WHERE 1 < (SELECT COUNT(*) FROM Orders WHERE Orders.cnum = Customer.cnum) ORDER BY 2;
 14~3~SELECT snum FROM Salesmen WHERE city = 'San Jose' UNION (SELECT cnum FROM Customer WHERE city = 'San Jose' UNION ALL SELECT onum FROM Orders WHERE odate = 10/03/1990);
+15~1~INSERT INTO Salesmen (city, sname, comm, snum) VALUES ('San Jose', 'Blanco', NULL, 1100);
+15~2~DELETE FROM Orders WHERE cnum = 2006;
+15~3~UPDATE Customer SET rating = rating + 100 WHERE city = 'Rome';
+15~4~UPDATE Customer SET snum = 1004 WHERE snum = 1002;
+16~1~INSERT INTO Multicus (sname) SELECT sname FROM Salesmen WHERE 1 < (SELECT COUNT(*) FROM Customer WHERE Customer.snum = Salesmen.snum);
+16~2~DELETE FROM Customer WHERE NOT EXISTS (SELECT * FROM Orders WHERE cnum = Customer.cnum);
+16~3~UPDATE Salesmen SET comm = comm * 1.2 WHERE 3000 < (SELECT SUM(amt) FROM Orders WHERE Orders.snum = Salesmen.snum);

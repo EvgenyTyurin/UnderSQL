@@ -54,7 +54,12 @@ public class UnderSQL {
             Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
             Connection con = DriverManager.getConnection("jdbc:odbc:dBASE Files");
             Statement stmt = con.createStatement();
-            // Exec SQL
+            // if not SELECT just Exec SQL and quit
+            if (!query.startsWith("SELECT")) {
+                stmt.execute(query);
+                return;
+            }
+            // It was SELECT command - we must show result
             ResultSet rs = stmt.executeQuery(query);
             // Show title
             ResultSetMetaData rsmd = rs.getMetaData();

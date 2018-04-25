@@ -1,48 +1,72 @@
+# SELECT, WHERE, DISTINCT
 3~1~SELECT onum, amt, odate FROM Orders
 3~2~SELECT * FROM Customer WHERE snum = 1001
 3~3~SELECT city, sname, snum, comm FROM Salesmen
 3~4~SELECT rating, cname FROM Customer WHERE city = 'San Jose'
 3~5~SELECT DISTINCT snum FROM Orders
+# Logical operands in WHERE
 4~1~SELECT * FROM Orders WHERE amt > 1000
 4~2~SELECT sname, city FROM Salesmen WHERE comm > 0.1 AND city = 'London'
+# IN, BETWEEN, NULL
 5~1~SELECT * FROM Orders WHERE odate IN (10/03/1990, 10/04/1990)
 5~2~SELECT * FROM Customer WHERE snum IN (1001, 1004)
 5~3~SELECT * FROM Customer WHERE cname BETWEEN 'A' AND 'H'
 5~4~SELECT * FROM Customer WHERE cname BETWEEN 'C' AND 'D'
 5~5~SELECT * FROM Orders WHERE amt = 0 OR amt IS NULL
+# Aggregates
 6~1~SELECT COUNT(*) FROM Orders WHERE odate = 10/03/1990
 6~2~SELECT COUNT(*) FROM (SELECT DISTINCT city FROM Customer)
 6~3~SELECT cnum, MIN(amt) FROM Orders GROUP BY cnum
 6~4~SELECT MIN(cname) FROM Customer WHERE cname LIKE 'G%'
 6~5~SELECT city, MAX(rating) FROM Customer GROUP BY city
+# Ordering
 7~1~SELECT onum, snum, amt * 0.12 FROM Orders ORDER BY amt * 0.12
 7~2~SELECT 'For the city', city, 'max rating is', MAX(rating) FROM Customer GROUP BY city
 7~3~SELECT rating, cname, cnum FROM Customer ORDER BY rating DESC
 7~4~SELECT odate, SUM(amt) FROM ORDERS GROUP BY odate ORDER BY SUM(amt) DESC
+# Join tables
 8~1~SELECT onum, cname FROM Orders, Customer WHERE Orders.cnum = Customer.cnum
 8~2~SELECT onum, sname, cname FROM Orders, Salesmen, Customer WHERE Orders.snum = Salesmen.snum AND Orders.cnum = Customer.cnum
 8~3~SELECT cname, sname, comm FROM Customer, Salesmen, Orders WHERE Salesmen.comm > 0.12 AND Orders.snum = Salesmen.snum AND Customer.cnum = Orders.cnum
 8~4~SELECT onum, comm * amt FROM Orders, Salesmen, Customer WHERE Orders.snum = Salesmen.snum AND Customer.cnum = Orders.cnum AND rating > 100
+# Aliases
 9~1~SELECT S1.sname, S2.sname, S1.city FROM Salesmen S1, Salesmen S2 WHERE S1.city = S2.city AND S1.snum > S2.snum
 9~3~SELECT C1.cname, C1.city FROM Customer C1, Customer C2 WHERE C1.rating = C2.rating AND C2.cname = 'Hoffman' AND C1.cnum <> C2.cnum
+# Aggregates and joins
 10~1~SELECT onum FROM Orders WHERE Orders.cnum IN (SELECT cnum FROM Customer WHERE Customer.cname = 'Cisneros')
 10~2~SELECT DISTINCT cname, rating FROM Customer, Orders WHERE amt > (SELECT AVG(amt) FROM Orders) AND Customer.cnum = Orders.cnum
 10~3~SELECT snum, SUM(amt) FROM Orders GROUP BY snum HAVING SUM(amt) > (SELECT MAX(amt) FROM Orders)
+# Sub queries
 11~1~SELECT cnum, cname FROM Customer OuterC WHERE rating = (SELECT MAX(rating) FROM Customer InnerC WHERE InnerC.city = OuterC.city)
 11~2~SELECT sname, city FROM Salesmen WHERE 0 = (SELECT COUNT(*) FROM Customer WHERE Customer.city = Salesmen.city AND Customer.snum = Salesmen.snum)
+# Exists
 12~1~SELECT sname FROM Salesmen WHERE EXISTS(SELECT * FROM Customer WHERE Customer.snum = Salesmen.snum AND rating = 300)
 12~2~SELECT DISTINCT sname FROM Salesmen, Customer WHERE Salesmen.snum = Customer.snum AND Customer.rating = 300
 12~3~SELECT sname FROM Salesmen WHERE EXISTS(SELECT * FROM Customer WHERE Customer.city = Salesmen.city AND Customer.snum <> Salesmen.snum)
 12~4~SELECT cname FROM Customer WHERE EXISTS(SELECT * FROM Orders WHERE Orders.snum = Customer.snum AND Orders.cnum <> Customer.cnum)
+# Any
 13~1~SELECT * FROM Customer WHERE rating >= ANY (SELECT rating FROM Customer WHERE snum = 1002);
 13~3~SELECT * FROM Salesmen WHERE NOT city = ANY (SELECT city FROM Customer);
+# Unions
 14~1~SELECT *, 'High rate' FROM Customer WHERE rating >= 200 UNION SELECT *, 'Low rate' FROM Customer WHERE rating < 200;
 14~2~SELECT snum, sname FROM Salesmen WHERE 1 < (SELECT COUNT(*) FROM Orders WHERE Orders.snum = Salesmen.snum) UNION SELECT cnum, cname FROM Customer WHERE 1 < (SELECT COUNT(*) FROM Orders WHERE Orders.cnum = Customer.cnum) ORDER BY 2;
 14~3~SELECT snum FROM Salesmen WHERE city = 'San Jose' UNION (SELECT cnum FROM Customer WHERE city = 'San Jose' UNION ALL SELECT onum FROM Orders WHERE odate = 10/03/1990);
+# DML
 15~1~INSERT INTO Salesmen (city, sname, comm, snum) VALUES ('San Jose', 'Blanco', NULL, 1100);
 15~2~DELETE FROM Orders WHERE cnum = 2006;
 15~3~UPDATE Customer SET rating = rating + 100 WHERE city = 'Rome';
 15~4~UPDATE Customer SET snum = 1004 WHERE snum = 1002;
+# DML and sub queries
 16~1~INSERT INTO Multicus (sname) SELECT sname FROM Salesmen WHERE 1 < (SELECT COUNT(*) FROM Customer WHERE Customer.snum = Salesmen.snum);
 16~2~DELETE FROM Customer WHERE NOT EXISTS (SELECT * FROM Orders WHERE cnum = Customer.cnum);
 16~3~UPDATE Salesmen SET comm = comm * 1.2 WHERE 3000 < (SELECT SUM(amt) FROM Orders WHERE Orders.snum = Salesmen.snum);
+# DDL
+17~1~CREATE TABLE newcust(cnum integer, cname char(15), city char(10), rating integer, snum integer);
+17~2~CREATE INDEX orderdate ON Orders(odate);
+17~3~CREATE UNIQUE INDEX orderkey ON Orders(onum);
+17~4~CREATE INDEX osnumdate ON Orders(snum, odate);
+17~5~CREATE UNIQUE INDEX combo ON Customer(snum, rating);
+#Constrains (not workin on dbf)
+#18~1~CREATE TABLE neworder (onum integer NOT NULL PRIMARY KEY, amt decimal, odate date NOT NULL, cnum integer NOT NULL, snum integer NOT NULL, UNIQUE(snum, cnum));
+#18~2~CREATE TABLE newsale (snum integer NOT NULL PRIMARY KEY, sname char(15) CHECK(sname BETWEEN 'AA' AND 'MZ'), city char(15), comm decimal NOT NULL DEFAULT = .10);
+#18~3~CREATE TABLE neworder (onum integer NOT NULL PRIMARY KEY, amt decimal, odate date NOT NULL, cnum integer NOT NULL, snum integer NOT NULL, CHECK((onum > cnum) AND (cnum > snum)));

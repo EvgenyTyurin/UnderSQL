@@ -18,6 +18,7 @@ public class UnderSQL {
     private static final String FILE_SQL = "src/sql.txt";
     // Task queries: [chapter number][exercise number]
     private static String[][] queries = new String[CHAPTER_MAX][EXERCISE_MAX];
+    private static String[][] task = new String[CHAPTER_MAX][EXERCISE_MAX];
 
     // Run point
     public static void main(String[] args) {
@@ -93,12 +94,13 @@ public class UnderSQL {
             scanFile.useDelimiter("\n");
             while (scanFile.hasNext()) {
                 String line = scanFile.next();
-                try {
-                    String[] words = line.split("~");
-                    queries[Integer.valueOf(words[0])][Integer.valueOf(words[1])] = words[2];
-                } catch (Exception e) {
-                    System.out.println("Error in parsing line:" + line);
-                }
+                if (!line.startsWith("#"))
+                    try {
+                        String[] words = line.split("~");
+                        queries[Integer.valueOf(words[0])][Integer.valueOf(words[1])] = words[2];
+                    } catch (Exception e) {
+                        System.out.println("Error in parsing line:" + line);
+                    }
             }
             scanFile.close();
         } catch (Exception e) {e.printStackTrace(); }

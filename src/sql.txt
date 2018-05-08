@@ -70,3 +70,6 @@
 #18~1~CREATE TABLE neworder (onum integer NOT NULL PRIMARY KEY, amt decimal, odate date NOT NULL, cnum integer NOT NULL, snum integer NOT NULL, UNIQUE(snum, cnum));
 #18~2~CREATE TABLE newsale (snum integer NOT NULL PRIMARY KEY, sname char(15) CHECK(sname BETWEEN 'AA' AND 'MZ'), city char(15), comm decimal NOT NULL DEFAULT = .10);
 #18~3~CREATE TABLE neworder (onum integer NOT NULL PRIMARY KEY, amt decimal, odate date NOT NULL, cnum integer NOT NULL, snum integer NOT NULL, CHECK((onum > cnum) AND (cnum > snum)));
+# Foreign keys (not working on dbf)
+#19~1~CREATE TABLE Cityord (onum integer NOT NULL PRIMARY KEY, amt decimal, snum integer, cnum integer, city char(15), FOREIGN KEY (onum, amt, snum) REFERENCES Orders (onum, amt, snum) FOREIGN KEY (cnum, city) REFERENCES Customer (cnum, city) );
+#19~2~CREATE TABLE Neworder (onum integer NOT NULL PRIMARY KEY, amt decimal, snum integer, cnum integer, odate date, prev integer, UNIQUE(cnum, onum), FOREIGN KEY (cnum, prev) REFERENCES Neworder (cnum, onum));

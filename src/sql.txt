@@ -73,3 +73,10 @@
 # Foreign keys (not working on dbf)
 #19~1~CREATE TABLE Cityord (onum integer NOT NULL PRIMARY KEY, amt decimal, snum integer, cnum integer, city char(15), FOREIGN KEY (onum, amt, snum) REFERENCES Orders (onum, amt, snum) FOREIGN KEY (cnum, city) REFERENCES Customer (cnum, city) );
 #19~2~CREATE TABLE Neworder (onum integer NOT NULL PRIMARY KEY, amt decimal, snum integer, cnum integer, odate date, prev integer, UNIQUE(cnum, onum), FOREIGN KEY (cnum, prev) REFERENCES Neworder (cnum, onum));
+# VIEW'S (no way on dbf, why i choose that old stuff at chapter 1?)
+#20~1~CREATE VIEW Topshop AS SELECT * FROM Customer WHERE rating = (SELECT MAX(rating) FROM Customer);
+#20~2~CREATE VIEW CitySNum AS SELECT city, COUNT(*) FROM Salesmen GROUP BY city;
+#20~3~CREATE VIEW Sresult AS SELECT sname, SUM(amt), AVG(amt) FROM Salesmen, Orders WHERE Salesmen.snum = Orders.snum GROUP BY sname;
+#20~4~CREATE VIEW Sresult AS SELECT sname, cname FROM Salesmen, Customer WHERE EXISTS(SELECT * FROM Orders WHERE cnum = Customer.cnum AND snum = Salesmen.snum);
+# https://toster.ru/q/529127
+29~1~SELECT cust1.cname, cust2.cname, cust2.city FROM Customer cust1, Customer cust2 WHERE cust1.city = cust2.city AND cust1.cname > cust2.cname;

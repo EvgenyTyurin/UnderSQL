@@ -78,5 +78,7 @@
 #20~2~CREATE VIEW CitySNum AS SELECT city, COUNT(*) FROM Salesmen GROUP BY city;
 #20~3~CREATE VIEW Sresult AS SELECT sname, SUM(amt), AVG(amt) FROM Salesmen, Orders WHERE Salesmen.snum = Orders.snum GROUP BY sname;
 #20~4~CREATE VIEW Sresult AS SELECT sname, cname FROM Salesmen, Customer WHERE EXISTS(SELECT * FROM Orders WHERE cnum = Customer.cnum AND snum = Salesmen.snum);
+# UPDATE VIEW RULES
+#21~2~CREATE VIEW Comm AS SELECT snum, comm FROM Salesmen WHERE comm BETWEEN 0.1 AND 0.2 WITH CHECK OPTION;
 # https://toster.ru/q/529127
 29~1~SELECT cust1.cname, cust2.cname, cust2.city FROM Customer cust1, Customer cust2 WHERE cust1.city = cust2.city AND cust1.cname > cust2.cname;

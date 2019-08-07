@@ -82,3 +82,8 @@
 #21~2~CREATE VIEW Comm AS SELECT snum, comm FROM Salesmen WHERE comm BETWEEN 0.1 AND 0.2 WITH CHECK OPTION;
 # https://toster.ru/q/529127
 29~1~SELECT cust1.cname, cust2.cname, cust2.city FROM Customer cust1, Customer cust2 WHERE cust1.city = cust2.city AND cust1.cname > cust2.cname;
+# JOINS
+30~1~SELECT person_name, docum_number FROM person INNER JOIN docum ON person.person_id = docum.docum_id;
+30~2~SELECT person_name, docum_number FROM person RIGHT JOIN docum ON person.person_id = docum.docum_id;
+30~3~SELECT person_name, docum_number FROM person LEFT JOIN docum ON person.person_id = docum.docum_id;
+
